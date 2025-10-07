@@ -7,12 +7,9 @@ It compares **Full Fine-tuning** and **LoRA** in terms of training efficiency an
 
 ## Project Structure
 ```goemotions-finetune/
-├── main.py           # One-click entry point for both experiments
-├── full_finetune.py  # Full fine-tuning logic
-├── lora_finetune.py  # LoRA fine-tuning logic
+├── main.py           # A simple entry point
 ├── requirements.txt  # Python dependencies
 ├── README.md         # This file
-└── results/          # Saved models, logs, and loss curves
 ```
 
 ## Overview
