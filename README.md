@@ -27,9 +27,23 @@ It compares **Full Fine-tuning** and **LoRA** in terms of training efficiency an
 
 ---
 
-## ⚙️ Installation
+## Installation
 
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/<your-username>/goemotions-finetune.git
-cd goemotions-finetune
+git clone https://github.com/wqretre/DSA4213_Assignement3_A0327221R.git
+```
+### 2️⃣ Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+## Reproduce Experiments
+
+### A simple entry point 
+Run both full fine-tuning and LoRA experiments to reproduce result
+```bash
+python main.py
+```
+This will show the processes of training, plot training and validation loss curve, show the metrics of the test dataset and some labels of examples predicted by model.
