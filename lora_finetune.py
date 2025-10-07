@@ -53,11 +53,10 @@ def run_lora_finetuning():
     val_dataset = tokenized_dataset['validation']
     test_dataset = tokenized_dataset['test']
 
-    model = AutoModelForSequenceClassification.from_pretrained(
-        "bert-base-uncased",
-        num_labels=num_labels,
-        problem_type="multi_label_classification"
-    ).to(device)
+    # load model
+    model_lora = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased",
+                                                           num_labels=num_labels,
+                                                           problem_type="multi_label_classification").to(device)
 
     lora_config = LoraConfig(
         task_type=TaskType.SEQ_CLS,
@@ -67,11 +66,11 @@ def run_lora_finetuning():
         target_modules=["query", "value"]
     )
 
-    model = get_peft_model(model, lora_config)
+    model_lora = get_peft_model(model_lora, lora_config)
 
-    training_args = TrainingArguments(
-        output_dir="./results/lora_finetune",
-        evaluation_strategy="steps",
+    training_args_lora = TrainingArguments(
+        output_dir="./lora_gomotions",
+        eval_strategy="steps",
         eval_steps=400,
         learning_rate=2e-4,
         per_device_train_batch_size=16,
@@ -88,44 +87,47 @@ def run_lora_finetuning():
         dataloader_pin_memory=True,
         dataloader_num_workers=2
     )
-
-    trainer = Trainer(
-        model=model,
-        args=training_args,
+    
+    trainer_lora = Trainer(
+        model=model_lora,
+        args=training_args_lora,
         train_dataset=train_dataset,
         eval_dataset=val_dataset,
         tokenizer=tokenizer,
-        compute_metrics=compute_metrics
+        compute_metrics=compute_metrics,
+        data_collator=data_collator
     )
 
     print("Training LoRA fine-tuning model...")
-    trainer.train()
+    train_result_lora = trainer_lora.train()
+    metrics_lora = train_result_lora.metrics
     model.save_pretrained("./results/lora_model")
 
     print("Evaluating LoRA fine-tuning model...")
     test_metrics_lora = trainer_lora.evaluate(eval_dataset=test_dataset)
     print(f"F1 score:{test_metrics_lora['eval_f1']}\nper label accuracy:{test_metrics_lora['eval_per_label_accuracy']}\nsubset accuracy:{test_metrics_lora['eval_subset_accuracy']}\nhamming loss:{test_metrics_lora['eval_hamming_loss']}")
 
-    logs = trainer.state.log_history
-    train_loss = [x["loss"] for x in logs if "loss" in x]
-    eval_loss = [x["eval_loss"] for x in logs if "eval_loss" in x]
+    # plot the loss curve
+    logs_lora = trainer_lora.state.log_history
+    train_loss_lora = [x["loss"] for x in logs_lora if "loss" in x]
+    eval_loss_lora = [x["eval_loss"] for x in logs_lora if "eval_loss" in x]
     # Plot train loss
     plt.figure(figsize=(8, 5))
-    plt.plot(train_loss, color='blue')
+    plt.plot(range(len(train_loss_lora)), train_loss_lora, color='blue')
     plt.xlabel("Step")
     plt.ylabel("Train Loss")
-    plt.title("Training Loss Curve - Full Fine-tuning")
+    plt.title("Training Loss Curve-LoRA")
     os.makedirs("./results", exist_ok=True)
-    plt.savefig("./results/full_finetune_train_loss.png")
+    plt.savefig("./results/LoRA_train_loss.png")
     plt.close()
     
     # Plot validation loss
     plt.figure(figsize=(8, 5))
-    plt.plot(eval_loss, color='orange')
+    plt.plot(range(len(eval_loss)), eval_loss, color='orange')
     plt.xlabel("Step")
     plt.ylabel("Validation Loss")
-    plt.title("Validation Loss Curve - Full Fine-tuning")
-    plt.savefig("./results/full_finetune_val_loss.png")
+    plt.title("Validation Loss Curve - LoRA")
+    plt.savefig("./results/LoRA_val_loss.png")
     plt.close()
 
     # test sample
