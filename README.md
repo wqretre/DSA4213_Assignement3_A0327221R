@@ -16,9 +16,9 @@ It compares **Full Fine-tuning** and **LoRA** in terms of training efficiency an
 
 | Item | Description |
 |------|--------------|
-| **Dataset** | [GoEmotions (simplified)](https://huggingface.co/datasets/go_emotions) |
+| **Dataset** | [GoEmotions (simplified)](https://huggingface.co/datasets/SetFit/go_emotions) |
 | **Model** | `bert-base-uncased` |
-| **Task** | Multi-label emotion classification |
+| **Task** | Multi-label sentiment analysis |
 | **Methods** | Full Fine-tuning and LoRA |
 | **Metrics** | F1 score, Per-label Accuracy, Subset Accuracy, Hamming Loss |
 
