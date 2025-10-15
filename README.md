@@ -28,7 +28,7 @@ It compares **Full Fine-tuning** and **LoRA** in terms of training efficiency an
 
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/wqretre/DSA4213_Assignement3_A0327221R.git
+git clone https://github.com/wqretre/DSA4213_Assignment3_A0327221R.git
 ```
 ### 2️⃣ Install dependencies
 
