@@ -1,4 +1,4 @@
-# DSA4213_Assignement3_A0327221R
+# DSA4213_Assignment3_A0327221R
 
 This repository contains code for fine-tuning and parameter-efficient tuning (LoRA) of **BERT-base-uncased** on the **GoEmotions** dataset for multi-label emotion classification.  
 It compares **Full Fine-tuning** and **LoRA** in terms of training efficiency and performance.
